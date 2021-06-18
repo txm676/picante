@@ -637,9 +637,11 @@ ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "freque
     pd.obs.rank <- apply(X = rbind(pd.obs, pd.rand), MARGIN = 2,
                          FUN = rank)[1, ]
     pd.obs.rank <- ifelse(is.na(pd.rand.mean),NA,pd.obs.rank)
-    return(data.frame(ntaxa=specnumber(samp),pd.obs, pd.rand.mean, pd.rand.sd, pd.obs.rank,
-               pd.obs.z, pd.obs.p=pd.obs.rank/(runs+1),runs=runs, row.names = row.names(samp)))
-    
+    res_df <- data.frame(ntaxa=specnumber(samp),pd.obs, pd.rand.mean, pd.rand.sd, pd.obs.rank,
+               pd.obs.z, pd.obs.p=pd.obs.rank/(runs+1),runs=runs, row.names = row.names(samp))
+    null_vals <- pd.rand
+    res <- list(res_df, null_vals)
+    return(res)
   }
   
   if(include.root == FALSE) {
