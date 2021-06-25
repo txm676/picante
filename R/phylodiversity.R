@@ -632,7 +632,7 @@ ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "freque
         samp_sp <- colnames(samp)#species in samp
         #match sample species with tips in tree, get the tip numbers
         #for these species, then randomly assign species names in sample
-        #to these numbers and calculate PD  
+        #to these numbers and calculate PD
         tip_samp <- which(tree$tip.label %in% samp_sp)
         if (length(tip_samp) != length(samp_sp)) stop("Anjuna")
         if (!all(tree$tip.label[tip_samp] %in% samp_sp)) stop("jumping river")
