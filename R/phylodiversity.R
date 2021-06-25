@@ -615,7 +615,7 @@ pd <- function (samp, tree, include.root = TRUE) {
 }
 
 ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "frequency",
-    "sample.pool", "phylogeny.pool", "independentswap", "trialswap"),
+    "sample.pool", "phylogeny.pool", "independentswap", "trialswap", "taxa.tabels"),
     runs = 999, iterations = 1000, include.root=TRUE)
 {
   if(include.root == TRUE) {
