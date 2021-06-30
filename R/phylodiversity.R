@@ -663,6 +663,13 @@ ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "freque
     pd.rand.mean <- apply(X = pd.rand, MARGIN = 2, FUN = mean, na.rm=TRUE)
     pd.rand.sd <- apply(X = pd.rand, MARGIN = 2, FUN = sd, na.rm=TRUE)
     pd.obs.z <- (pd.obs - pd.rand.mean)/pd.rand.sd
+    #set the z value to 0 for any islands with all species in
+    if (any(specnumber(samp) == ncol(samp))){
+      wsamp <- which(specnumber(samp) == ncol(samp))
+      if (length(wsamp) > 1) stop("too many all species samples")
+      if (!is.na(pd.obs.z[wsamp])) stop("all sp sample not NA")
+      pd.obs.z[wsamp] <- 0
+    }
     pd.obs.rank <- apply(X = rbind(pd.obs, pd.rand), MARGIN = 2,
                          FUN = rank)[1, ]
     pd.obs.rank <- ifelse(is.na(pd.rand.mean),NA,pd.obs.rank)
