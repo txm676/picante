@@ -620,6 +620,8 @@ ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "freque
 {
   if(include.root == TRUE) {
     pd.obs <- as.vector(pd(samp, tree, include.root=TRUE)$PD)
+    pd.obs <- round(pd.obs, 6)
+    
     null.model <- match.arg(null.model)
     
     pd.rand <- switch(null.model,
@@ -632,7 +634,7 @@ ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "freque
                       independentswap = t(replicate(runs, as.vector(pd(randomizeMatrix(samp,null.model="independentswap", iterations), tree, include.root=TRUE)$PD))),
                       trialswap = t(replicate(runs, as.vector(pd(randomizeMatrix(samp,null.model="trialswap", iterations), tree, include.root=TRUE)$PD)))
     )
-    
+    pd.rand <- round(pd.rand, 6)
     
     pd.rand.mean <- apply(X = pd.rand, MARGIN = 2, FUN = mean, na.rm=TRUE)
     pd.rand.sd <- apply(X = pd.rand, MARGIN = 2, FUN = sd, na.rm=TRUE)
