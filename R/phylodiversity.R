@@ -615,7 +615,8 @@ pd <- function (samp, tree, include.root = TRUE) {
 }
 
 ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "frequency",
-    "sample.pool", "phylogeny.pool", "independentswap", "trialswap"),
+    "sample.pool", "phylogeny.pool", "independentswap", "trialswap",
+    "taxa.tabels"),
     runs = 999, iterations = 1000, include.root=TRUE)
 {
   if(include.root == TRUE) {
@@ -623,6 +624,31 @@ ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "freque
     pd.obs <- round(pd.obs, 6)
     
     null.model <- match.arg(null.model)
+    
+    if (null.model == "taxa.tabels"){
+      
+      tip_label_glob <- function(samp, tree){
+        
+        tree2 <- tree
+        un1 <- length(unique(tree$tip.label))
+        samp_sp <- colnames(samp)#species in samp
+        #match sample species with tips in tree, get the tip numbers
+        #for these species, then randomly assign species names in sample
+        #to these numbers and calculate PD 
+        tip_samp <- which(tree$tip.label %in% samp_sp)
+        if (length(tip_samp) != length(samp_sp)) stop("Anjuna")
+        if (!all(tree$tip.label[tip_samp] %in% samp_sp)) stop("jumping river")
+        tip_ss <- sample(tip_samp, length(samp_sp), replace = FALSE)
+        tree2$tip.label[tip_ss] <- samp_sp
+        if(!length(unique(tree$tip.label)) == un1) stop("flip flop")
+        rr <- as.vector(pd(samp, tree2, include.root=TRUE)$PD)
+        return(rr)
+      }
+      
+      pd.rand <-  t(replicate(runs, tip_label_glob(samp, tree)))
+      
+    } else{
+      
     
     pd.rand <- switch(null.model,
                       taxa.labels = t(replicate(runs, as.vector(pd(samp, tipShuffle(tree), include.root=TRUE)$PD))),
@@ -634,6 +660,10 @@ ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "freque
                       independentswap = t(replicate(runs, as.vector(pd(randomizeMatrix(samp,null.model="independentswap", iterations), tree, include.root=TRUE)$PD))),
                       trialswap = t(replicate(runs, as.vector(pd(randomizeMatrix(samp,null.model="trialswap", iterations), tree, include.root=TRUE)$PD)))
     )
+    
+    }
+    
+    
     pd.rand <- round(pd.rand, 6)
     
     pd.rand.mean <- apply(X = pd.rand, MARGIN = 2, FUN = mean, na.rm=TRUE)
