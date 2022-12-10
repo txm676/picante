@@ -624,6 +624,7 @@ ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "freque
     pd.obs <- round(pd.obs, 6)
     
     null.model <- match.arg(null.model)
+    if (null.model != "taxa.tabels") stop("cold xmas night")
     
     if (null.model == "taxa.tabels"){
       
