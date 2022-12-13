@@ -617,17 +617,23 @@ pd <- function (samp, tree, include.root = TRUE) {
 ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "frequency",
     "sample.pool", "phylogeny.pool", "independentswap", "trialswap",
     "taxa.tabels"),
-    runs = 999, iterations = 1000, include.root=TRUE)
+    runs = 999, iterations = 1000, include.root=TRUE, check_trees = FALSE)
 {
   if(include.root == TRUE) {
     pd.obs <- as.vector(pd(samp, tree, include.root=TRUE)$PD)
     pd.obs <- round(pd.obs, 6)
     
     null.model <- match.arg(null.model)
-    if (null.model != "taxa.tabels") stop("cold xmas night")
+    #if check_trees is true this means ses.pd is being used inside 
+    #check_trees_fun and so should be taxa.labels
+    if (check_trees){
+      if (null.model != "taxa.labels") stop("cold xmas night A")
+    } else if (!check_trees){
+    if (null.model != "taxa.tabels") stop("cold xmas night B")
+    }
     
     if (null.model == "taxa.tabels"){
-      
+    
       tip_label_glob <- function(samp, tree){
         
         tree2 <- tree
