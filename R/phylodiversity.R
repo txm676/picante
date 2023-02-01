@@ -621,7 +621,7 @@ ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "freque
 {
   if(include.root == TRUE) {
     pd.obs <- as.vector(pd(samp, tree, include.root=TRUE)$PD)
-    pd.obs <- round(pd.obs, 6)
+    pd.obs <- round(pd.obs, 3)
     
     null.model <- match.arg(null.model)
     #if check is true this means ses.pd is being used inside 
@@ -671,7 +671,7 @@ ses.pd <- function(samp, tree, null.model = c("taxa.labels", "richness", "freque
     }
     
     
-    pd.rand <- round(pd.rand, 6)
+    pd.rand <- round(pd.rand, 3)
     
     pd.rand.mean <- apply(X = pd.rand, MARGIN = 2, FUN = mean, na.rm=TRUE)
     pd.rand.sd <- apply(X = pd.rand, MARGIN = 2, FUN = sd, na.rm=TRUE)
